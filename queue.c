@@ -45,10 +45,11 @@ int main() {
     scanf("%d", &n);
 
     do {
-        printf("\n*****QUEUE OPERATIONS*******\n");
+        printf("\nQUEUE OPERATIONS\n");
         printf("\n1.Enqueue");
         printf("\n2.Dequeue");
         printf("\n3.Display");
+        printf("\n4.exit");
         printf("\nEnter your choice: ");
         scanf("%d", &option);
 
@@ -62,16 +63,15 @@ int main() {
             case 3:
                 display(queue, front, rear);
                 break;
+            case 4:
+                break;
             default:
                 printf("\nInvalid option\n");
         }
 
-        printf("\nDo you want to continue(Y/N)? ");
-        getchar();
-        scanf("%c", &ch);
+      
+    } while (ch!=4);
 
-    } while (ch == 'y' || ch == 'Y');
-
-    printf("\nExiting...\n");
+    printf("\nExiting\n");
     return 0;
 }
