@@ -1,43 +1,32 @@
 #include<stdio.h>
 void main()
 {
-int n,a[100],i,j,temp,time=0;
-time++;
-printf("enter no. of elements");
-time++;
-scanf("%d",&n);
-time++;
-printf("enter the elemnts");
-time++;
-for(i=0;i<n;i++)
+int sparse[20][20],i,j,k=1,b[20][3],r,c;
+printf("enter the order of matrix");
+scanf("%d%d",&r,&c);
+printf("enter the elements of the matrix");
+for(i=0;i<r;i++)
 {
-scanf("%d",&a[i]);
-time++;
-}
-time++;
-for(i=0;i<n;i++)
+for(j=0;j<c;j++)
 {
-temp=a[i];
-j=i-1;
-time++;
-while(j>=0 && a[j]>temp)
+scanf("%d",&sparse[i][j]);
+}}
+b[0][0]=r;
+b[0][1]=c;
+for(i=0;i<r;i++)
 {
-a[j+1]=a[j];
-j--;
-}
-a[j+1]=temp;
-}
-printf("sorted list\n");
-time++;
-time++;
-for(i=0;i<n;i++)
+for(j=0;j<c;j++)
 {
-printf("%d\n",a[i]);
-time++;
-}
-printf("\n");
-time++;
-printf("\n space complexity=%d",(n*4)+(5*4));
-time++;
-printf("\n time complexity=%d",time+1);
-}
+if(sparse[i][j]!=0)
+{
+b[k][0]=i;
+b[k][1]=j;
+b[k][2]=sparse[i][j];
+k++;
+}}}
+b[0][2]=k-1;
+printf("sparse matrix representation is\n");
+for(i=0;i<k;i++)
+{
+printf("\n%d\t%d\t%d",b[i][0],b[i][1],b[i][2]);
+}}
