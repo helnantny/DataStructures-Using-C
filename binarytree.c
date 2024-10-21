@@ -47,3 +47,7 @@ int main()
     {
         printf("Right child of %d is: %d\n", A[pos], A[(2 * pos )+ 2]);
     }
+
+    return 0;  
+}
+	
