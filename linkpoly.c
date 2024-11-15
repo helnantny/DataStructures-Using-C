@@ -1,112 +1,108 @@
 #include <stdio.h>
 #include <stdlib.h>
+// Define the structure for a polynomial node
 struct node {
-    int coef;
-    int expo;
-    struct node* link;
-};
-struct node* createNode(int coef, int expo) {
-    struct node* newNode = (struct node*)malloc(sizeof(struct node));
-    newNode->coef = coef;
+    int coeff;        // Coefficient of the term
+    int expo;         // Exponent of the term
+    struct node *link; // Pointer to the next term
+};// Function to create a new node
+struct node *createNode(int coeff, int expo) {
+    struct node *newNode = (struct node *)malloc(sizeof(struct node));
+    newNode->coeff = coeff;
     newNode->expo = expo;
     newNode->link = NULL;
     return newNode;
-}
-void printPolynomial(struct node* head) {
-    struct node* p = head;
-    while (p != NULL) {
-        if (p->link == NULL) {
-            printf("(%dX^%d)", p->coef, p->expo);
+}// Function to read a polynomial
+struct node *readPolynomial() {
+    int n, coeff, expo;
+    struct node *head = NULL, *temp = NULL;
+    printf("Enter the number of terms in the polynomial: ");
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        printf("Enter coefficient and exponent for term %d: ", i + 1);
+        scanf("%d %d", &coeff, &expo);
+        struct node *newNode = createNode(coeff, expo);
+        if (head == NULL) {
+            head = newNode;
         } else {
-            printf("(%dX^%d) + ", p->coef, p->expo);
+            temp->link = newNode;
         }
-        p = p->link;
+        temp = newNode;
+    }
+    return head;
+}// Function to display a polynomial
+void displayPolynomial(struct node *head) {
+    struct node *temp = head;
+    if (head == NULL) {
+        printf("Polynomial is empty\n");
+        return;
+    }
+    while (temp != NULL) {
+        printf("%dx^%d", temp->coeff, temp->expo);
+        if (temp->link != NULL) {
+            printf(" + ");
+        }
+        temp = temp->link;
     }
     printf("\n");
-}
+}// Function to add two polynomials
+struct node *addPolynomials(struct node *p1, struct node *p2) {
+    struct node *head = NULL, *temp = NULL;
+    while (p1 != NULL && p2 != NULL) {
+        struct node *newNode;
+
+        if (p1->expo == p2->expo) {
+            newNode = createNode(p1->coeff + p2->coeff, p1->expo);
+            p1 = p1->link;
+            p2 = p2->link;
+        } else if (p1->expo > p2->expo) {
+            newNode = createNode(p1->coeff, p1->expo);
+            p1 = p1->link;
+        } else {
+            newNode = createNode(p2->coeff, p2->expo);
+            p2 = p2->link;
+        }
+        if (head == NULL) {
+            head = newNode;
+        } else {
+            temp->link = newNode;
+        }
+        temp = newNode;
+    }   // Add remaining terms of p1
+    while (p1 != NULL) {
+        struct node *newNode = createNode(p1->coeff, p1->expo);
+        if (head == NULL) {
+            head = newNode;
+        } else {
+            temp->link = newNode;
+        }
+        temp = newNode;
+        p1 = p1->link;
+    }    // Add remaining terms of p2
+    while (p2 != NULL) {
+        struct node *newNode = createNode(p2->coeff, p2->expo);
+        if (head == NULL) {
+            head = newNode;
+        } else {
+            temp->link = newNode;
+        }
+        temp = newNode;
+        p2 = p2->link;
+    }
+    return head;
+}// Main function
 int main() {
-    int no1, no2, i, coef1, expo1;
-    struct node* rhead = NULL;
-    struct node* phead = NULL;
-    struct node* qhead = NULL;
-    struct node* r = NULL;
-    struct node* p = NULL;
-    struct node* q = NULL;
-    // Input first polynomial
-    printf("Enter the number of terms in polynomial 1: ");
-    scanf("%d", &no1);
-    if (no1 != 0) {
-        printf("Enter the terms of the 1st polynomial in descending order:\n");
-        for (i = 0; i < no1; i++) {
-            printf("Enter the coefficient of term %d: ", i + 1);
-            scanf("%d", &coef1);
-            printf("Exponent of term %d: ", i + 1);
-            scanf("%d", &expo1);
-            struct node* temp = createNode(coef1, expo1);
-            if (phead == NULL) {
-                phead = temp;
-                p = temp;
-            } else {
-                p->link = temp;
-                p = temp;
-            }
-        }
-    }
-    printf("First Polynomial: ");
-    printPolynomial(phead);
-    // Input second polynomial
-    printf("Enter the number of terms in polynomial 2: ");
-    scanf("%d", &no2);
-    if (no2 != 0) {
-        printf("Enter the terms of the 2nd polynomial in descending order:\n");
-        for (i = 0; i < no2; i++) {
-            printf("Enter the coefficient of term %d: ", i + 1);
-            scanf("%d", &coef1);
-            printf("Exponent of term %d: ", i + 1);
-            scanf("%d", &expo1);
-            struct node* temp = createNode(coef1, expo1);
-            if (qhead == NULL) {
-                qhead = temp;
-                q = temp;
-            } else {
-                q->link = temp;
-                q = temp;
-            }
-        }
-    }
+    struct node *poly1, *poly2, *result;
+    printf("Enter the first polynomial:\n");
+    poly1 = readPolynomial();
+    printf("Enter the second polynomial:\n");
+    poly2 = readPolynomial();
+    printf("\nFirst Polynomial: ");
+    displayPolynomial(poly1);
     printf("Second Polynomial: ");
-    printPolynomial(qhead);
-    // Add the two polynomials
-    p = phead;
-    q = qhead;
-    while (p != NULL || q != NULL) {
-        struct node* temp = (struct node*)malloc(sizeof(struct node));
-        if (p != NULL && (q == NULL || p->expo > q->expo)) {
-            temp->coef = p->coef;
-            temp->expo = p->expo;
-            p = p->link;
-        } else if (q != NULL && (p == NULL || q->expo > p->expo)) {
-            temp->coef = q->coef;
-            temp->expo = q->expo;
-            q = q->link;
-        } else {
-            temp->coef = p->coef + q->coef;
-            temp->expo = p->expo;
-            p = p->link;
-            q = q->link;
-        }
-        temp->link = NULL;
-        if (rhead == NULL) {
-            rhead = temp;
-            r = temp;
-        } else {
-            r->link = temp;
-            r = temp;
-        }
-    }
-    printf("Resultant Polynomial: ");
-    printPolynomial(rhead);   
+    displayPolynomial(poly2);
+    result = addPolynomials(poly1, poly2);
+    printf("\nResultant Polynomial: ");
+    displayPolynomial(result);
     return 0;
 }
-
-
